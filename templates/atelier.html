@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Humidité Marseille — AreaChart</title>
+
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      text-align: center;
+      color: #2193b0;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 30px;
+    }
+    #chart { width: 100%; height: 520px; }
+    #status {
+      margin-top: 15px;
+      text-align: center;
+      color: #999;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>💧 Humidité — Marseille</h1>
+    <p class="subtitle">Prévisions horaires sur les 7 prochains jours</p>
+    <div id="chart"></div>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(init);
+
+    let cachedRows = null;
+
+    async function init() {
+      try {
+        const rows = await fetchData();
+        cachedRows = rows;
+        drawChart(rows);
+
+        window.addEventListener('resize', () => {
+          if (cachedRows) drawChart(cachedRows);
+        });
+      } catch (err) {
+        showStatus("Erreur: " + (err?.message || err));
+        console.error(err);
+      }
+    }
+
+    async function fetchData() {
+      const res = await fetch('/marseille', { headers: { 'Accept': 'application/json' } });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} sur /marseille`);
+      }
+
+      const json = await res.json();
+
+      const rows = json.map(p => {
+        const dt = toDate(p.datetime);
+        const humidity = Number(p.humidity);
+        return [dt, humidity];
+      });
+
+      rows.sort((a, b) => a[0] - b[0]);
+
+      return rows;
+    }
+
+    function toDate(isoLike) {
+      const [datePart, timePart] = isoLike.split('T');
+      const [y, m, d] = datePart.split('-').map(Number);
+      const [hh, mm] = timePart.split(':').map(Number);
+      return new Date(y, m - 1, d, hh, mm, 0);
+    }
+
+    function drawChart(rows) {
+      const data = new google.visualization.DataTable();
+      data.addColumn('datetime', 'Date/Heure');
+      data.addColumn('number', 'Humidité (%)');
+      data.addRows(rows);
+
+      const options = {
+        title: 'Humidité relative à Marseille (horaire)',
+        legend: { position: 'bottom' },
+        hAxis: {
+          title: 'Date/Heure',
+          format: 'dd/MM HH:mm'
+        },
+        vAxis: {
+          title: 'Humidité (%)',
+          minValue: 0,
+          maxValue: 100
+        },
+        colors: ['#2193b0'],
+        areaOpacity: 0.4,
+        explorer: { actions: ['dragToZoom', 'rightClickToReset'] }
+      };
+
+      const chart = new google.visualization.AreaChart(document.getElementById('chart'));
+      chart.draw(data, options);
+
+      showStatus(`✓ ${rows.length} points chargés depuis /marseille`);
+    }
+
+    function showStatus(msg) {
+      document.getElementById('status').textContent = msg;
+    }
+  </script>
+</body>
+</html>
