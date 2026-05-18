@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — Dylan Desir</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 550px;
+      width: 100%;
+      padding: 50px 40px;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .header h1 {
+      color: #333;
+      font-size: 2em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: #777;
+      font-size: 0.95em;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      color: #444;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9em;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1em;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #f9f9f9;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.05em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #999;
+      font-size: 0.85em;
+    }
+
+    .icon {
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    #message-status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    #message-status.success {
+      display: block;
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📬 Contactez-moi</h1>
+      <p>Une question, un projet ? N'hésitez pas !</p>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="prenom"><span class="icon">👤</span>Prénom</label>
+        <input type="text" id="prenom" placeholder="Votre prénom" />
+      </div>
+      <div class="form-group">
+        <label for="nom"><span class="icon">📝</span>Nom</label>
+        <input type="text" id="nom" placeholder="Votre nom" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email"><span class="icon">✉️</span>Email</label>
+      <input type="email" id="email" placeholder="exemple@email.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="message"><span class="icon">💬</span>Message</label>
+      <textarea id="message" placeholder="Écrivez votre message ici..."></textarea>
+    </div>
+
+    <button onclick="envoyer()">Envoyer le message ✨</button>
+
+    <div id="message-status"></div>
+
+    <div class="footer">
+      © 2026 — Atelier Métriques
+    </div>
+  </div>
+
+  <script>
+    function envoyer() {
+      const prenom = document.getElementById('prenom').value;
+      const status = document.getElementById('message-status');
+      status.textContent = `Merci ${prenom || ''} ! Votre message a bien été pris en compte. 🎉`;
+      status.className = 'success';
+    }
+  </script>
+</body>
+</html>

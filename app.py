@@ -8,10 +8,6 @@ def hello_world():
     return render_template('hello.html')
 
 # Déposez votre code à partir d'ici :
-@app.route("/contact")
-def MaPremiereAPI():
-    return "<h2>Ma page de contact</h2>"
-
 @app.get("/paris")
 def api_paris():
     url = "https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&hourly=temperature_2m"
@@ -30,6 +26,10 @@ def mongraphique():
 @app.route("/histogramme")
 def monhistogramme():
     return render_template("histogramme.html")
+
+@app.route("/contact")
+def MaPremiereAPI():
+    return render_template("contact.html")
 # Ne rien mettre après ce commentaire  
 if __name__ == "__main__":
   app.run(host="0.0.0.0", port=5000, debug=True)
